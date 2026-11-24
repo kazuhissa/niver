@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Para você ♥</title>
+<meta name="theme-color" content="#240611">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400;1,6..96,600&family=Jost:wght@300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+:root{
+  --vinho:#240611; --rubi:#b3203f; --ouro:#e6c992; --blush:#f4d6d2; --marfim:#fbf3ea;
+  --display:'Bodoni Moda',Georgia,serif;
+  --script:'Pinyon Script','Snell Roundhand',cursive;
+  --texto:'Jost',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:var(--texto);font-weight:300;color:var(--marfim);background:var(--vinho);line-height:1.7;overflow-x:hidden;padding-top:env(safe-area-inset-top)}
+body.travado{overflow:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(700px 500px at 10% 0%,#5a1630 0,transparent 65%),radial-gradient(700px 600px at 100% 60%,#43102a 0,transparent 60%)}
+section{padding:90px 22px;max-width:640px;margin:0 auto;text-align:center}
+.titulo{font-family:var(--script);font-weight:400;font-size:clamp(2.6rem,11vw,3.8rem);line-height:1.1;color:var(--ouro);margin-bottom:8px}
+.dica{font-size:.95rem;color:var(--blush);opacity:.85;margin-bottom:30px}
+.btn,.nao{font:400 1rem var(--texto);border-radius:999px;padding:14px 30px;cursor:pointer;transition:transform .2s}
+.btn{color:var(--vinho);background:linear-gradient(135deg,var(--ouro),#f6e3bd);border:0;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.nao{color:var(--ouro);background:transparent;border:1px solid var(--ouro)}
+.btn:active{transform:scale(.96)}
+button:focus-visible{outline:3px solid var(--blush);outline-offset:4px}
+
+/* ---------- Envelope de abertura ---------- */
+#abertura{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:44px;
+  background:radial-gradient(circle at 50% 40%,#4a1228,var(--vinho) 70%);transition:opacity 1s,visibility 1s}
+#abertura.some{opacity:0;visibility:hidden}
+#abertura p{font-family:var(--script);font-size:2rem;color:var(--ouro)}
+.envelope{position:relative;width:min(84vw,340px);aspect-ratio:4/3;perspective:900px}
+.envelope>*{position:absolute}
+.papel{left:7%;right:7%;top:8%;bottom:8%;z-index:1;background:var(--marfim);color:var(--vinho);border-radius:6px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:transform .8s .5s ease}
+.papel small{font-size:.9rem}
+.papel b{font-family:var(--script);font-weight:400;font-size:2.4rem;line-height:1.1}
+.frente-env{inset:0;z-index:2;background:linear-gradient(160deg,#7d1e3d,#5a1630);clip-path:polygon(0 0,50% 52%,100% 0,100% 100%,0 100%)}
+.aba{left:0;right:0;top:0;height:58%;z-index:3;background:linear-gradient(#a02a4c,#7d1e3d);clip-path:polygon(0 0,100% 0,50% 100%);
+  transform-origin:top;transition:transform .7s ease,z-index 0s .35s}
+.selo{left:50%;top:56%;transform:translate(-50%,-50%);z-index:4;width:56px;height:56px;border-radius:50%;border:0;cursor:pointer;
+  background:radial-gradient(circle at 35% 30%,#e0405f,#8f1530);color:var(--blush);font-size:1.4rem;
+  box-shadow:0 4px 14px rgba(0,0,0,.5);animation:pulso 1.6s ease-in-out infinite;transition:opacity .3s}
+.aberto .aba{transform:rotateX(180deg);z-index:0}
+.aberto .papel{transform:translateY(-45%)}
+.aberto .selo{opacity:0;pointer-events:none}
+@keyframes pulso{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.12)}}
+
+/* ---------- Início ---------- */
+#inicio{min-height:100svh;max-width:none;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.felizes{font-family:var(--script);font-size:clamp(3rem,15vw,5.8rem);color:var(--ouro);line-height:1}
+#nome{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(3rem,15vw,7rem);line-height:1.05;margin:6px 0 4px}
+.fio{width:130px;height:1px;background:linear-gradient(90deg,transparent,var(--ouro),transparent);margin:18px auto}
+.sub{font-size:1.05rem;color:var(--blush);max-width:26ch}
+.rolar{position:absolute;bottom:max(26px,env(safe-area-inset-bottom));color:var(--ouro);text-decoration:none;font-size:.95rem}
+
+/* ---------- Camada de corações ---------- */
+#camada{position:fixed;inset:0;z-index:60;pointer-events:none;overflow:hidden}
+#camada span{position:fixed;line-height:1}
+
+/* ---------- Contador ---------- */
+#contador{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tempo{padding:16px 4px;border:1px solid rgba(230,201,146,.3);border-radius:16px}
+.tempo b{display:block;font-family:var(--display);font-style:italic;font-weight:400;font-size:2.1rem;color:var(--ouro);line-height:1.1}
+.tempo span{font-size:.85rem;opacity:.8}
+
+/* ---------- Deck de fotos ---------- */
+#deck{position:relative;width:min(78vw,320px);height:min(104vw,430px);margin:0 auto 34px}
+.cf{position:absolute;inset:0;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .35s}
+.cf.arrasta{transition:none}
+.giro{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .6s}
+.virada .giro{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:18px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.5);
+  backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.frente{background:linear-gradient(160deg,var(--rubi),#5a1630)}
+.frente.sem::before{content:"♥";position:absolute;inset:0;display:grid;place-items:center;font-size:4rem;color:var(--ouro);opacity:.5}
+.frente img{width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+.legenda{position:absolute;left:0;right:0;bottom:0;padding:44px 16px 16px;background:linear-gradient(transparent,rgba(20,3,10,.88));
+  font-family:var(--display);font-style:italic;font-size:1.15rem}
+.verso{transform:rotateY(180deg);background:var(--marfim);color:var(--vinho);display:grid;place-items:center;padding:26px;
+  font-family:var(--display);font-style:italic;font-size:1.15rem;line-height:1.6}
+#deck-info{margin-top:6px;font-size:.9rem;opacity:.8}
+
+/* ---------- Carta ---------- */
+.carta{text-align:left;font-family:var(--display);font-size:1.15rem;line-height:1.9;padding:30px 24px;
+  border:1px solid rgba(230,201,146,.28);border-radius:22px;background:rgba(251,243,234,.05)}
+.carta p{margin-bottom:1em}
+.assina{font-family:var(--script);font-size:2.2rem;color:var(--ouro);text-align:right;margin:.4em 0 0!important;opacity:0;transition:opacity 1.2s}
+.assina.on{opacity:1}
+
+/* ---------- Raspadinha ---------- */
+.raspa{position:relative;width:min(86vw,360px);height:190px;margin:0 auto;border-radius:20px;overflow:hidden;background:var(--marfim);color:var(--vinho)}
+.premio{position:absolute;inset:0;display:grid;place-items:center;padding:20px;font-family:var(--script);font-size:2rem;line-height:1.2}
+#cv{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:pointer;transition:opacity .8s}
+
+/* ---------- Motivos ---------- */
+.motivo{min-height:150px;margin:28px auto 0;max-width:420px;padding:28px 24px;border:1px solid rgba(230,201,146,.35);border-radius:22px;
+  display:grid;place-items:center;font-family:var(--display);font-style:italic;font-size:1.25rem}
+#mcont{margin-top:10px;font-size:.9rem;opacity:.7}
+
+/* ---------- Pergunta final ---------- */
+.pergunta{font-family:var(--display);font-style:italic;font-size:1.5rem;line-height:1.4}
+.zona{position:relative;height:210px;margin-top:24px;display:flex;justify-content:center;align-items:center;gap:18px}
+#sim{transition:transform .3s}
+.resposta{font-family:var(--script);font-size:clamp(2rem,9vw,3rem);line-height:1.25;color:var(--ouro)}
+#final{padding-bottom:140px}
+
+/* ---------- Música ---------- */
+#musica{position:fixed;right:18px;bottom:max(18px,env(safe-area-inset-bottom));z-index:70;width:54px;height:54px;border-radius:50%;
+  border:1px solid rgba(230,201,146,.4);cursor:pointer;background:rgba(36,6,17,.6);color:var(--ouro);font-size:1.2rem;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+
+@media (min-width:720px){#contador{grid-template-columns:repeat(6,1fr)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body class="travado">
+
+<!-- Envelope: tocar no selo abre o presente e libera a música -->
+<div id="abertura">
+  <div class="envelope" id="envelope">
+    <div class="papel"><small>Para</small><b id="papel-nome"></b></div>
+    <div class="frente-env"></div>
+    <div class="aba"></div>
+    <button class="selo" id="selo" type="button" aria-label="Abrir o envelope">♥</button>
+  </div>
+  <p>Toque no selo</p>
+</div>
+
+<div id="camada" aria-hidden="true"></div>
+
+<main>
+  <section id="inicio">
+    <p class="felizes">Feliz aniversário</p>
+    <h1 id="nome"></h1>
+    <div class="fio"></div>
+    <p class="sub" id="data-texto"></p>
+    <a class="rolar" href="#juntos">role para baixo</a>
+  </section>
+
+  <section id="juntos">
+    <h2 class="titulo">Nosso tempo</h2>
+    <p class="dica">Cada segundo conta, e está contando agora.</p>
+    <div id="contador"></div>
+  </section>
+
+  <section id="fotos">
+    <h2 class="titulo">Nossas memórias</h2>
+    <p class="dica">Deslize para passar. Toque para virar e ler a lembrança.</p>
+    <div id="deck"></div>
+    <p id="deck-info"></p>
+    <button class="btn" id="proxima" type="button">Próxima foto</button>
+  </section>
+
+  <section id="carta-sec">
+    <h2 class="titulo">Uma carta pra você</h2>
+    <div class="carta" id="carta"></div>
+  </section>
+
+  <section id="presente">
+    <h2 class="titulo">Seu presente</h2>
+    <p class="dica">Raspe com o dedo para descobrir.</p>
+    <div class="raspa" id="raspa"><div class="premio" id="premio"></div><canvas id="cv"></canvas></div>
+  </section>
+
+  <section id="motivos">
+    <h2 class="titulo">Motivos pra te amar minha capivarinha</h2>
+    <p class="dica">Tenho muitos. Sorteie um de cada vez.</p>
+    <button class="btn" id="sortear" type="button">Sortear um motivo</button>
+    <div class="motivo" id="motivo" aria-live="polite">Toque no botão acima</div>
+    <p id="mcont"></p>
+  </section>
+
+  <section id="final">
+    <h2 class="titulo">Uma última pergunta</h2>
+    <p class="pergunta" id="pergunta"></p>
+    <div class="zona" id="zona">
+      <button class="btn" id="sim" type="button">Sim ♥</button>
+      <button class="nao" id="nao" type="button">Não</button>
+    </div>
+    <p class="resposta" id="resposta"></p>
+  </section>
+</main>
+
+<button id="musica" type="button" aria-label="Pausar ou tocar música">♪</button>
+<!-- Coloque sua música na mesma pasta, com o nome musica.mp3 -->
+<audio id="audio" src="/musica/musica.mp3" loop preload="auto"></audio>
+
+<script>
+/* =====================================================
+   EDITE AQUI: textos, datas e fotos
+   ===================================================== */
+const CONFIG = {
+  nomeDela: "Daniele",
+  seuNome: "Gabriel",
+  dataAniversario: "23 de Janeiro, um dia só seu",
+  inicioNamoro: "2026-05-23T15:00:00",   // ano-mês-diaTHORA:MIN:SEG
+
+  // arquivo = foto na pasta fotos/ | legenda = frente | memoria = texto do verso
+  fotos: [
+    { arquivo: "fotos/foto1.jpeg", legenda: "O dia em que tudo começou",   memoria: "Eu ainda lembro do seu sorriso nesse dia. Foi ali que eu soube que ia me apaixonar." },
+    { arquivo: "fotos/foto2.jpeg", legenda: "Minha companhia favorita",    memoria: "Qualquer programa vira o melhor programa quando é com você." },
+    { arquivo: "fotos/foto3.jpeg", legenda: "Nosso primeiro passeio",      memoria: "Eu estava nervoso e você nem percebeu. Ou fingiu que não." },
+    { arquivo: "fotos/foto4.jpeg", legenda: "Rindo com motivo",            memoria: "Essas são as minhas risadas preferidas: as nossas." },
+    { arquivo: "fotos/foto5.jpeg", legenda: "Do seu lado é meu lugar",     memoria: "Se eu pudesse guardar um momento num potinho, seria esse." }
+  ],
+
+  carta: [
+    "Meu amor, hoje é o seu dia, e eu queria te dar algo que durasse mais do que um dia.",
+    "Desde que você chegou, tudo ficou mais leve. Você transforma dias comuns em lembranças que eu quero guardar pra sempre.",
+    "Obrigado por cada risada, cada abraço e cada paciência comigo. Ao seu lado eu aprendi o que é ter paz no meio da correria.",
+    "Que esse novo ano venha cheio de saúde, conquistas e de todos os sonhos que você carrega. E que eu esteja bem pertinho, vendo cada um se realizar."
+  ],
+
+  presente: "Um jantar só nosso, no lugar que você escolher ♥",
+
+  motivos: [
+    "Pelo seu sorriso, que muda o meu dia inteiro.",
+    "Pelo jeito que você cuida de quem ama.",
+    "Porque com você até o silêncio é bom.",
+    "Pela pessoa que eu me torno ao seu lado.",
+    "Porque eu escolheria você em todas as vidas.",
+    "Pela sua risada, que eu reconheço de longe."
+  ],
+
+  pergunta: "Você aceita continuar sendo a minha pessoa favorita no mundo?",
+  finalTexto: "Eu sabia. Feliz aniversário, meu amor. Você é o melhor presente que a vida me deu.",
+  volumeMusica: 0.6   // de 0 a 1
+};
+
+/* =====================================================
+   A partir daqui não precisa mexer
+   ===================================================== */
+const $ = (id) => document.getElementById(id);
+const audio = $("audio");
+audio.volume = CONFIG.volumeMusica;
+const semMovimento = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let aberto = false;
+
+/* ----- Textos ----- */
+document.title = "Para " + CONFIG.nomeDela + " ♥";
+$("papel-nome").textContent = CONFIG.nomeDela;
+$("nome").textContent = CONFIG.nomeDela;
+$("data-texto").textContent = CONFIG.dataAniversario;
+$("premio").textContent = CONFIG.presente;
+$("pergunta").textContent = CONFIG.pergunta;
+
+/* ----- Corações (toques, explosões e ambiente) ----- */
+const CORES = ["#b3203f", "#e6788c", "#f4d6d2", "#e6c992"];
+const rand = (a, b) => a + Math.random() * (b - a);
+
+function coracao(x, y, o = {}) {
+  const c = document.createElement("span");
+  c.textContent = "♥";
+  c.style.left = x + "px";
+  c.style.top = y + "px";
+  c.style.fontSize = (o.s || 18) + "px";
+  c.style.color = o.cor || CORES[0];
+  $("camada").appendChild(c);
+  const a = c.animate([
+    { transform: "translate(-50%,-50%) scale(.4)", opacity: o.op || 1 },
+    { transform: `translate(calc(-50% + ${o.dx || 0}px),calc(-50% + ${o.dy ?? -120}px)) rotate(${o.r || 0}deg) scale(1)`, opacity: 0 }
+  ], { duration: o.d || 1200, easing: "cubic-bezier(.2,.7,.3,1)" });
+  a.onfinish = () => c.remove();
+}
+
+function explosao(x, y, n = 18) {
+  if (semMovimento) return;
+  for (let i = 0; i < n; i++) {
+    const ang = rand(0, Math.PI * 2), dist = rand(60, 190);
+    coracao(x, y, { dx: Math.cos(ang) * dist, dy: Math.sin(ang) * dist - 40, s: rand(14, 34),
+      cor: CORES[i % CORES.length], d: rand(900, 1700), r: rand(-50, 50) });
+  }
+}
+
+// toque em qualquer lugar solta corações (menos no deck e na raspadinha)
+document.addEventListener("pointerdown", (e) => {
+  if (!aberto || e.target.closest("#deck, #cv")) return;
+  explosao(e.clientX, e.clientY, 5);
+});
+
+// corações subindo devagar ao fundo
+setInterval(() => {
+  if (!aberto || document.hidden || semMovimento) return;
+  coracao(rand(0, innerWidth), innerHeight + 20, { dx: rand(-50, 50), dy: -(innerHeight + 80),
+    s: rand(12, 26), cor: CORES[Math.floor(rand(0, 4))], d: rand(7000, 12000), op: .5 });
+}, 900);
+
+/* ----- Abrir envelope ----- */
+$("selo").addEventListener("click", (e) => {
+  audio.play().catch(() => {});
+  $("envelope").classList.add("aberto");
+  aberto = true;
+  explosao(e.clientX || innerWidth / 2, e.clientY || innerHeight / 2, 24);
+  setTimeout(() => {
+    $("abertura").classList.add("some");
+    document.body.classList.remove("travado");
+  }, 1800);
+  atualizarBotao();
+});
+
+/* ----- Música ----- */
+function atualizarBotao() { $("musica").textContent = audio.paused ? "♪" : "❚❚"; }
+$("musica").addEventListener("click", () => { audio.paused ? audio.play() : audio.pause(); });
+audio.addEventListener("play", atualizarBotao);
+audio.addEventListener("pause", atualizarBotao);
+
+/* ----- Contador ----- */
+function atualizarContador() {
+  const ini = new Date(CONFIG.inicioNamoro), ag = new Date();
+  let anos = ag.getFullYear() - ini.getFullYear(), meses = ag.getMonth() - ini.getMonth(), dias = ag.getDate() - ini.getDate();
+  let h = ag.getHours() - ini.getHours(), m = ag.getMinutes() - ini.getMinutes(), s = ag.getSeconds() - ini.getSeconds();
+  if (s < 0) { s += 60; m--; }
+  if (m < 0) { m += 60; h--; }
+  if (h < 0) { h += 24; dias--; }
+  if (dias < 0) { meses--; dias += new Date(ag.getFullYear(), ag.getMonth(), 0).getDate(); }
+  if (meses < 0) { anos--; meses += 12; }
+  $("contador").innerHTML = [[anos,"anos"],[meses,"meses"],[dias,"dias"],[h,"horas"],[m,"minutos"],[s,"segundos"]]
+    .map(([v, r]) => `<div class="tempo"><b>${v}</b><span>${r}</span></div>`).join("");
+}
+atualizarContador();
+setInterval(atualizarContador, 1000);
+
+/* ----- Deck de fotos: deslizar passa, tocar vira ----- */
+const deck = $("deck");
+const ordem = CONFIG.fotos.map((_, i) => i);
+const cartas = CONFIG.fotos.map((f) => {
+  const c = document.createElement("div");
+  c.className = "cf";
+  c.innerHTML = `<div class="giro">
+    <div class="face frente"><div class="legenda"></div></div>
+    <div class="face verso"><p></p></div></div>`;
+  c.querySelector(".legenda").textContent = f.legenda;
+  c.querySelector(".verso p").textContent = f.memoria;
+  const frente = c.querySelector(".frente"), img = new Image();
+  img.alt = f.legenda;
+  img.onerror = () => { img.remove(); frente.classList.add("sem"); };
+  img.src = f.arquivo;
+  frente.prepend(img);
+  deck.appendChild(c);
+  return c;
+});
+
+function organizar() {
+  ordem.forEach((idx, pos) => {
+    const c = cartas[idx];
+    c.style.zIndex = ordem.length - pos;
+    c.style.opacity = pos > 2 ? 0 : 1;
+    c.style.transform = `translateY(${pos * 12}px) scale(${1 - pos * 0.05}) rotate(${pos === 0 ? 0 : (pos % 2 ? 3 : -3)}deg)`;
+  });
+  $("deck-info").textContent = `${ordem[0] + 1} de ${cartas.length}`;
+}
+
+let ocupado = false;
+function passar(dir) {
+  if (ocupado) return;
+  ocupado = true;
+  const c = cartas[ordem[0]];
+  c.style.transform = `translateX(${dir * innerWidth}px) rotate(${dir * 25}deg)`;
+  c.style.opacity = 0;
+  setTimeout(() => {
+    ordem.push(ordem.shift());
+    c.classList.add("arrasta");
+    c.classList.remove("virada");
+    organizar();
+    requestAnimationFrame(() => requestAnimationFrame(() => { c.classList.remove("arrasta"); ocupado = false; }));
+  }, 300);
+}
+
+let toque = null;
+deck.addEventListener("pointerdown", (e) => {
+  if (ocupado) return;
+  const c = cartas[ordem[0]];
+  toque = { x: e.clientX, y: e.clientY, dx: 0, dy: 0, c };
+  c.classList.add("arrasta");
+  deck.setPointerCapture(e.pointerId);
+});
+deck.addEventListener("pointermove", (e) => {
+  if (!toque) return;
+  toque.dx = e.clientX - toque.x;
+  toque.dy = e.clientY - toque.y;
+  toque.c.style.transform = `translateX(${toque.dx}px) rotate(${toque.dx / 18}deg)`;
+});
+function soltar(cancelado) {
+  if (!toque) return;
+  const { c, dx, dy } = toque;
+  toque = null;
+  c.classList.remove("arrasta");
+  if (!cancelado && Math.abs(dx) > 80) passar(dx > 0 ? 1 : -1);
+  else {
+    if (!cancelado && Math.abs(dx) < 6 && Math.abs(dy) < 6) {
+      c.classList.toggle("virada");
+      const r = c.getBoundingClientRect();
+      explosao(r.left + r.width / 2, r.top + r.height / 2, 8);
+    }
+    organizar();
+  }
+}
+deck.addEventListener("pointerup", () => soltar(false));
+deck.addEventListener("pointercancel", () => soltar(true));
+$("proxima").addEventListener("click", () => passar(1));
+organizar();
+
+/* ----- Carta digitada ao chegar nela ----- */
+const trechos = CONFIG.carta.map((t) => {
+  const p = document.createElement("p"), a = document.createElement("span"), b = document.createElement("span");
+  b.style.color = "transparent";
+  b.textContent = t;
+  p.append(a, b);
+  $("carta").appendChild(p);
+  return { a, b, t };
+});
+const assina = document.createElement("p");
+assina.className = "assina";
+assina.textContent = CONFIG.seuNome;
+$("carta").appendChild(assina);
+
+async function digitar() {
+  for (const x of trechos) {
+    if (semMovimento) { x.a.textContent = x.t; x.b.textContent = ""; continue; }
+    for (let i = 1; i <= x.t.length; i++) {
+      x.a.textContent = x.t.slice(0, i);
+      x.b.textContent = x.t.slice(i);
+      await new Promise((r) => setTimeout(r, 20));
+    }
+  }
+  assina.classList.add("on");
+}
+new IntersectionObserver((en, obs) => {
+  if (en[0].isIntersecting) { obs.disconnect(); digitar(); }
+}, { threshold: 0.35 }).observe($("carta"));
+
+/* ----- Raspadinha ----- */
+const cv = $("cv"), ctx = cv.getContext("2d");
+let raspando = false, feito = false, ult = null, ultCheck = 0;
+
+function pintar() {
+  if (feito) return;
+  const r = cv.getBoundingClientRect(), d = devicePixelRatio || 1;
+  cv.width = r.width * d;
+  cv.height = r.height * d;
+  ctx.scale(d, d);
+  const g = ctx.createLinearGradient(0, 0, r.width, r.height);
+  g.addColorStop(0, "#f2dcae"); g.addColorStop(.5, "#c9a15e"); g.addColorStop(1, "#f2dcae");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, r.width, r.height);
+  ctx.fillStyle = "#5a1630";
+  ctx.font = "italic 24px 'Bodoni Moda', Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.fillText("Raspe aqui ♥", r.width / 2, r.height / 2 + 8);
+}
+document.fonts.ready.then(pintar);
+addEventListener("resize", pintar);
+
+function posicao(e) { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+function riscar(p) {
+  ctx.globalCompositeOperation = "destination-out";
+  ctx.lineWidth = 46;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(ult.x, ult.y);
+  ctx.lineTo(p.x + 0.01, p.y);
+  ctx.stroke();
+  ult = p;
+}
+function conferir() {
+  const t = Date.now();
+  if (t - ultCheck < 150) return;
+  ultCheck = t;
+  const d = ctx.getImageData(0, 0, cv.width, cv.height).data;
+  let limpos = 0, total = 0;
+  for (let i = 3; i < d.length; i += 160) { total++; if (d[i] === 0) limpos++; }
+  if (limpos / total > 0.5) {
+    feito = true;
+    cv.style.opacity = 0;
+    setTimeout(() => cv.remove(), 900);
+    const r = $("raspa").getBoundingClientRect();
+    explosao(r.left + r.width / 2, r.top + r.height / 2, 30);
+  }
+}
+cv.addEventListener("pointerdown", (e) => { raspando = true; cv.setPointerCapture(e.pointerId); ult = posicao(e); riscar(ult); });
+cv.addEventListener("pointermove", (e) => { if (raspando && !feito) { riscar(posicao(e)); conferir(); } });
+["pointerup", "pointercancel"].forEach((n) => cv.addEventListener(n, () => { raspando = false; }));
+
+/* ----- Sorteio de motivos ----- */
+let fila = [], vez = 0;
+function embaralhar() { fila = CONFIG.motivos.map((_, i) => i).sort(() => Math.random() - .5); vez = 0; }
+embaralhar();
+$("sortear").addEventListener("click", (e) => {
+  if (vez >= fila.length) embaralhar();
+  $("motivo").textContent = CONFIG.motivos[fila[vez++]];
+  $("mcont").textContent = `${vez} de ${CONFIG.motivos.length}`;
+  $("motivo").animate([{ transform: "scale(.9)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }], { duration: 350 });
+  explosao(e.clientX, e.clientY, 8);
+});
+
+/* ----- Pergunta final: o "Não" foge ----- */
+const sim = $("sim"), nao = $("nao"), zona = $("zona");
+const falas = ["Não", "Tem certeza?", "Pensa de novo", "Última chance", "Ok, sim ♥"];
+let fugas = 0;
+
+function aceitar() {
+  nao.style.display = "none";
+  sim.textContent = "♥";
+  sim.style.transform = "scale(1.4)";
+  sim.disabled = true;
+  $("pergunta").style.display = "none";
+  $("resposta").textContent = CONFIG.finalTexto;
+  for (let i = 0; i < 8; i++) setTimeout(() => explosao(rand(60, innerWidth - 60), rand(innerHeight * .2, innerHeight * .8), 26), i * 350);
+}
+function fugir() {
+  if (fugas >= falas.length - 1) return aceitar();
+  fugas++;
+  nao.textContent = falas[fugas];
+  nao.style.position = "absolute";
+  nao.style.left = rand(0, Math.max(0, zona.clientWidth - nao.offsetWidth)) + "px";
+  nao.style.top = rand(0, Math.max(0, zona.clientHeight - nao.offsetHeight)) + "px";
+  sim.style.transform = `scale(${1 + fugas * 0.15})`;
+}
+nao.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") fugir(); });
+nao.addEventListener("pointerdown", (e) => { e.preventDefault(); fugir(); });
+nao.addEventListener("click", (e) => { if (e.detail === 0) fugir(); });
+sim.addEventListener("click", aceitar);
+</script>
+</body>
+</html>
